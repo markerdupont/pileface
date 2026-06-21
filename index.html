@@ -58,6 +58,20 @@ const supabaseKey =
 'sb_publishable_YgS5-5Bqh3FPiKX4mKyDgQ_8v0Gfimz';
 const supabase =
 createClient(supabaseUrl, supabaseKey);
+supabase
+.channel('flips-channel')
+.on(
+  'postgres_changes',
+  {
+    event: 'INSERT',
+    schema: 'public',
+    table: 'flips'
+  },
+  () => {
+    chargerHistorique();
+  }
+)
+.subscribe();
 async function chargerHistorique() {
 const { data, error } = await supabase
 .from('flips')
